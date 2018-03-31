@@ -51,9 +51,9 @@ class Printer
     puts "Verb: #{@parser.retrieve_verb(request_lines)}"
     puts "Path: #{@parser.retrieve_path(request_lines)}"
     puts "Protocol: #{@parser.retrieve_protocol(request_lines)}"
-    puts "Host: #{@parser.retrieve_host}"
-    puts "Port: #{@parser.retrieve_port}"
-    puts "Origin: #{@parser.retrieve_origin}"
-    puts "Accept: #{@parser.retrieve_accept}"
+    puts "Host: #{@parser.retrieve_host(request_lines)}"
+    puts "Port: #{@parser.retrieve_port(request_lines)}"
+    puts "Origin: #{@parser.retrieve_origin(request_lines)}"
+    puts "Accept: #{@parser.retrieve_accept(request_lines)}"
   end
 end
