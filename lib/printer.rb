@@ -4,6 +4,7 @@ class Printer
 
   def initialize
     @hello_world_counter = 0
+    @parser = Parser.new
   end
 
   def ready_message
@@ -35,47 +36,24 @@ class Printer
             "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
+  def retrieve_path(request_lines)
+    @parser.retrieve_path(request_lines)
+  end
+
   def got_a_request_message(request_lines)
     puts "Got this request:"
     puts request_lines.inspect
+
     puts "\n"
   end
 
-  def retrieve_verb(request_lines)
-    request_lines[0].split[0]
-  end
-
-  def retrieve_path(request_lines)
-    request_lines[0].split[1]
-  end
-
-  def retrieve_protocol(request_lines)
-    request_lines[0].split[2]
-  end
-
-  def retrieve_host(request_lines)
-    request_lines[1].split(":")[1].strip
-  end
-
-  def retrieve_port(request_lines)
-    request_lines[1].split(":")[2].strip
-  end
-
-  def retrieve_origin(request_lines)
-    request_lines[1].split(":")[1].strip
-  end
-
-  def retrieve_accept(request_lines)
-    request_lines[3].split(":")[1].strip
-  end
-
   def print_debug(request_lines)
-    puts "Verb: #{retrieve_verb(request_lines)}"
-    puts "Path: #{retrieve_path(request_lines)}"
-    puts "Protocol: #{retrieve_protocol(request_lines)}"
-    puts "Host: #{retrieve_host(request_lines)}"
-    puts "Port: #{retrieve_port(request_lines)}"
-    puts "Origin: #{retrieve_origin(request_lines)}"
-    puts "Accept: #{retrieve_accept(request_lines)}"
+    puts "Verb: #{@parser.retrieve_verb(request_lines)}"
+    puts "Path: #{@parser.retrieve_path(request_lines)}"
+    puts "Protocol: #{@parser.retrieve_protocol(request_lines)}"
+    puts "Host: #{@parser.retrieve_host}"
+    puts "Port: #{@parser.retrieve_port}"
+    puts "Origin: #{@parser.retrieve_origin}"
+    puts "Accept: #{@parser.retrieve_accept}"
   end
 end
