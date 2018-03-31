@@ -4,11 +4,13 @@ require "./lib/printer.rb"
 class Server
   attr_reader :server,
               :printer,
-              :client
+              :client,
+              :counter
 
   def initialize
     @server = TCPServer.new(9292)
     @printer = Printer.new
+    @counter = 0
   end
 
   def start_server
@@ -21,7 +23,6 @@ class Server
       end
       got_a_request(request_lines)
       parse_request(request_lines)
-      send_hello_world
       if @printer.hello_world_counter == 3
         @client.close
         exit
@@ -32,6 +33,7 @@ class Server
   end
 
   def send_hello_world
+    @counter += 1
     response = @printer.hello_world_response
     output = @printer.output_formatted(response)
     header = @printer.headers_formatted(output)
@@ -43,17 +45,29 @@ class Server
     @printer.got_a_request_message(request_lines)
   end
 
-  def output_diagnostics
-    @printer.print_debug
+  def output_diagnostics(request_lines)
+    @counter += 1
+    @client.puts @printer.print_debug(request_lines)
   end
 
   def parse_request(request_lines)
     input = @printer.retrieve_path(retrieve_lines)
     case input
-    when input == "/"       then output_diagnostics
-    when input == "/hello"  then send_hello_world
+    when input == "/"         then output_diagnostics(request_lines)
+    when input == "/hello"    then send_hello_world
+    when input == "/datetime" then print_date_and_time
+    when input == "/shutdown" then shutdown(@counter)
+    end
+  end
+
+  def print_date_and_time
+    @client.puts @printer.date_and_time_message
+  end
+
+  def shutdown(counter)
+    @client.puts @printer.shutdown_message(counter)
+  end
+
+
 
 end
-
-x = Server.new
-x.start_server

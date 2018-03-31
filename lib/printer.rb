@@ -15,6 +15,14 @@ class Printer
     return "<pre>" + "Hello, World! (#{hello_world_counter})" + "</pre>"
   end
 
+  def date_and_time_message
+    return "<pre> #{Time.now.strftime('%I:%M%p on %A, %B %e, %Y')} </pre>"
+  end
+
+  def shutdown_message(counter)
+    return "<pre> Total Requests: #{counter} </pre>"
+  end
+
   def output_formatted(response)
     return "<html><head></head><body>#{response}</body></html>"
   end
@@ -28,9 +36,9 @@ class Printer
   end
 
   def got_a_request_message(request_lines)
-    puts "Got this request:"
-    puts request_lines.inspect
-    puts "\n"
+    "Got this request:"
+    request_lines.inspect
+    "\n"
   end
 
   def retrieve_verb(request_lines)
