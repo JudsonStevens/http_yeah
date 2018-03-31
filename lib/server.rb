@@ -47,6 +47,11 @@ class Server
     @printer.print_debug
   end
 
+  def parse_request(request_lines)
+    input = @printer.retrieve_path(retrieve_lines)
+    case input
+    when input == "/"       then output_diagnostics
+    when input == "/hello"  then send_hello_world
 
 end
 
