@@ -36,9 +36,9 @@ class Printer
   end
 
   def got_a_request_message(request_lines)
-    "Got this request:"
-    request_lines.inspect
-    "\n"
+    puts "Got this request:"
+    puts request_lines.inspect
+    puts "\n"
   end
 
   def retrieve_verb(request_lines)
