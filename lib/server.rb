@@ -23,7 +23,9 @@ class Server
         request_lines << line.chomp
       end
       @router.got_a_request(request_lines)
-      @router.parse_request(request_lines)
+      if request_lines != []
+        @router.parse_request(request_lines)
+      end
     end
   end
 end

@@ -3,12 +3,14 @@ require_relative 'printer.rb'
 class Router
   attr_reader :printer,
               :counter,
-              :client
+              :client,
+              :guesses
 
   def initialize(client)
     @client = client
     @counter = 0
     @printer = Printer.new
+    @guesses = []
   end
 
   def got_a_request(request_lines)
@@ -19,23 +21,34 @@ class Router
     input = @printer.retrieve_path(request_lines)
     verb = @printer.retrieve_verb(request_lines)
     case
-    when verb == "POST"           then post_handler(request_lines)
+    when verb == "POST"           then post_handler(request_lines, input)
     when input == "/"             then output_diagnostics(request_lines)
-    when input == "/hello"        then send_hello_world
+    when input == "/hello"        then print_hello_world
     when input == "/datetime"     then print_date_and_time
     when input == "/shutdown"     then shutdown(@counter)
+    when input == "/game"         then guess_history
     when word_search_input(input) then search_dictionary(request_lines)
     end
   end
 
   def word_search_input(input)
-    input.include?("word_search")
+    if input != nil
+      input.include?("word_search")
+    end
   end
 
-  def post_handler(request_lines)
-    puts @client.read(@printer.printing_content_length(request_lines).to_i)
+  def post_handler(request_lines, input)
+    if input == "/start_game"
+      response = @printer.game_start_message
+      print_to_client(response)
+    elsif input == "/game"
+      body = @client.read(@printer.print_content_length(request_lines).to_i)
+      guess = body.split("=")[1]
+      @guesses << guess
     @printer.got_a_request_message(request_lines)
+    end
   end
+
 
   def search_dictionary(request_lines)
     @counter += 1
@@ -49,7 +62,7 @@ class Router
     print_to_client(response)
   end
 
-  def send_hello_world
+  def print_hello_world
     @counter += 1
     response = @printer.hello_world_response
     print_to_client(response)
