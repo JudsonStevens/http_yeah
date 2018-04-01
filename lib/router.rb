@@ -6,11 +6,15 @@ class Router
               :client,
               :guesses
 
-  def initialize(client)
-    @client = client
+  def initialize
     @counter = 0
     @printer = Printer.new
     @guesses = []
+    @client = nil
+  end
+
+  def accept_client(client)
+    @client = client
   end
 
   def got_a_request(request_lines)
@@ -45,6 +49,7 @@ class Router
       body = @client.read(@printer.print_content_length(request_lines).to_i)
       guess = body.split("=")[1]
       @guesses << guess
+      require "pry"; binding.pry
     @printer.got_a_request_message(request_lines)
     end
   end
@@ -78,6 +83,7 @@ class Router
     response = @printer.shutdown_message(counter)
     print_to_client(response)
     @client.close
+    return "Shutdown"
   end
 
   def print_to_client(response)

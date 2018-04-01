@@ -9,24 +9,33 @@ class Server
 
   def initialize
     @server = TCPServer.new(9292)
-    @router = nil
+    @router = Router.new
     @printer = Printer.new
   end
 
   def start_server
-    @client = @server.accept
-    @router = Router.new(@client)
+
     @printer.ready_message
     loop do
       request_lines = []
+      @client = @server.accept
+      @router.accept_client(@client)
       while line = @client.gets and !line.chomp.empty?
         request_lines << line.chomp
+        # require "pry"; binding.pry
       end
       @router.got_a_request(request_lines)
-      if request_lines != []
-        @router.parse_request(request_lines)
+      message = @router.parse_request(request_lines)
+      if message == "Shutdown"
+        shutdown
       end
+
     end
+  end
+
+  def shutdown
+    @client.close
+    @server.close
   end
 end
 
