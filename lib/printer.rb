@@ -1,3 +1,5 @@
+require_relative "parser.rb"
+
 class Printer
 
   attr_reader :hello_world_counter
@@ -43,17 +45,17 @@ class Printer
   def got_a_request_message(request_lines)
     puts "Got this request:"
     puts request_lines.inspect
-
+    puts print_debug(request_lines)
     puts "\n"
   end
 
   def print_debug(request_lines)
-    puts "Verb: #{@parser.retrieve_verb(request_lines)}"
-    puts "Path: #{@parser.retrieve_path(request_lines)}"
-    puts "Protocol: #{@parser.retrieve_protocol(request_lines)}"
-    puts "Host: #{@parser.retrieve_host(request_lines)}"
-    puts "Port: #{@parser.retrieve_port(request_lines)}"
-    puts "Origin: #{@parser.retrieve_origin(request_lines)}"
-    puts "Accept: #{@parser.retrieve_accept(request_lines)}"
+    "Verb: #{@parser.retrieve_verb(request_lines)}" +
+    "Path: #{@parser.retrieve_path(request_lines)}" +
+    "Protocol: #{@parser.retrieve_protocol(request_lines)}" +
+    "Host: #{@parser.retrieve_host(request_lines)}" +
+    "Port: #{@parser.retrieve_port(request_lines)}" +
+    "Origin: #{@parser.retrieve_origin(request_lines)}" +
+    "Accept: #{@parser.retrieve_accept(request_lines)}"
   end
 end

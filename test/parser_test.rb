@@ -29,5 +29,6 @@ class ParserTest < MiniTest::Test
     actual = @p.retrieve_path(@r)
     assert_equal expected, actual
   end
-  
+
+
 end
