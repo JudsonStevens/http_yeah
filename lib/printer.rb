@@ -49,6 +49,13 @@ class Printer
     puts "\n"
   end
 
+  def word_found_or_not_found_message(request_lines)
+    word = @parser.retrieve_word_for_word_search(request_lines)
+    result = @parser.return_word_validity(word)
+    return "#{word} is a known word" if result
+    return "#{word} is not a known word" if !result
+  end
+
   def print_debug(request_lines)
     "Verb: #{@parser.retrieve_verb(request_lines)}" +
     "Path: #{@parser.retrieve_path(request_lines)}" +

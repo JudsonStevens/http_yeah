@@ -12,6 +12,10 @@ class Parser
     request_lines[0].split[2]
   end
 
+  def retrieve_word_for_word_search(request_lines)
+    retrieve_path(request_lines).split("?")[1].split("=")[1]
+  end
+
   def retrieve_host(request_lines)
     split_array = split_array_into_smaller_array(request_lines)
     result_array = return_location_port_array_from_host(split_array)
@@ -55,5 +59,13 @@ class Parser
       end
     end
     host_array.compact
+  end
+
+  def return_word_validity(word)
+    found_word = File.open('/usr/share/dict/words') do |file|
+      file.grep(/#{word}/)
+    end
+    return false if found_word == []
+    return true
   end
 end
