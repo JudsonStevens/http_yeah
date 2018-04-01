@@ -38,6 +38,11 @@ class Printer
             "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
+  def error_message_contents
+    return "A system error has occured, the server has shut down."
+  end
+  
+
   def retrieve_path(request_lines)
     @parser.retrieve_path(request_lines)
   end

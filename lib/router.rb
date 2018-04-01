@@ -34,8 +34,20 @@ class Router
     when input == "/datetime"     then print_date_and_time
     when input == "/shutdown"     then shutdown(@counter)
     when input == "/game"         then guess_response
+    when input == "/force_error"  then error_message
     when word_search_input(input) then search_dictionary(request_lines)
     end
+    uknown_string
+  end
+
+  def error_message
+    response = @printer.error_message_contents
+    print_to_client(response, "500 Internal Service Error")
+    raise "A SYSTEM ERROR has occured"
+  end
+
+  def uknown_string
+    @counter += 1
     print_to_client("Uknown PATH!", "404 Not Found")
   end
 
@@ -110,7 +122,7 @@ class Router
 
   def print_to_client(response, status_code = "200 ok")
     output = @printer.output_formatted(response)
-    header = @printer.headers_formatted(output, status)
+    header = @printer.headers_formatted(output, status_code)
     @client.puts header
     @client.puts output
   end
