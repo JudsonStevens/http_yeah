@@ -33,10 +33,14 @@ class Router
     when input == "/datetime"     then print_date_and_time
     when input == "/shutdown"     then shutdown(@counter)
 <<<<<<< HEAD
+<<<<<<< HEAD
     when input == "/game"         then guess_response
 =======
     when input == "/game"         then guess_history
 >>>>>>> 65c9ecf579bc81e8836ae66dd300cb914b0dc1d8
+=======
+    when input == "/game"         then guess_response
+>>>>>>> 1ae7fa49170e89e6e118880d148034127db79834
     when word_search_input(input) then search_dictionary(request_lines)
     end
   end
@@ -46,15 +50,23 @@ class Router
       input.include?("word_search")
     end
   end
+<<<<<<< HEAD
 
 <<<<<<< HEAD
+=======
+      
+>>>>>>> 1ae7fa49170e89e6e118880d148034127db79834
   def guess_response
     response = @game.list_guess_information
     print_to_client(response)
   end
+<<<<<<< HEAD
 
 =======
 >>>>>>> 65c9ecf579bc81e8836ae66dd300cb914b0dc1d8
+=======
+      
+>>>>>>> 1ae7fa49170e89e6e118880d148034127db79834
   def post_handler(request_lines, input)
     if input == "/start_game"
       response = @printer.game_start_message
