@@ -53,9 +53,14 @@ class Printer
     puts "\n"
   end
 
-  def printing_content_length(request_lines)
+  def print_content_length(request_lines)
     @parser.retrieve_content_length(request_lines)
   end
+
+  def game_start_message
+    return "Good luck!"
+  end
+
 
   def word_found_or_not_found_message(request_lines)
     word = @parser.retrieve_word_for_word_search(request_lines)
@@ -65,12 +70,12 @@ class Printer
   end
 
   def print_debug(request_lines)
-    "Verb: #{@parser.retrieve_verb(request_lines)}" +
-    "Path: #{@parser.retrieve_path(request_lines)}" +
-    "Protocol: #{@parser.retrieve_protocol(request_lines)}" +
-    "Host: #{@parser.retrieve_host(request_lines)}" +
-    "Port: #{@parser.retrieve_port(request_lines)}" +
-    "Origin: #{@parser.retrieve_origin(request_lines)}" +
+    "Verb: #{@parser.retrieve_verb(request_lines)}" + ("\n") + 
+    "Path: #{@parser.retrieve_path(request_lines)}" + ("\n") +
+    "Protocol: #{@parser.retrieve_protocol(request_lines)}" + ("\n") +
+    "Host: #{@parser.retrieve_host(request_lines)}" + ("\n") +
+    "Port: #{@parser.retrieve_port(request_lines)}" + ("\n") +
+    "Origin: #{@parser.retrieve_origin(request_lines)}" + ("\n") +
     "Accept: #{@parser.retrieve_accept(request_lines)}"
   end
 end

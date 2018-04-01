@@ -42,12 +42,12 @@ class Router
       input.include?("word_search")
     end
   end
-
+      
   def guess_response
     response = @game.list_guess_information
     print_to_client(response)
   end
-
+      
   def post_handler(request_lines, input)
     if input == "/start_game"
       response = @printer.game_start_message
