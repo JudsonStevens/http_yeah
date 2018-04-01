@@ -30,8 +30,8 @@ class Printer
     return "<html><head></head><body>#{response}</body></html>"
   end
 
-  def headers_formatted(output)
-    return ["http/1.1 200 ok",
+  def headers_formatted(output, status)
+    return ["http/1.1 #{status}",
             "date: #{Time.now.strftime('%a, %e, %b, %Y, %H:%M:%S %z')}",
             "server: ruby",
             "content-type: text/html; charset=iso-8859-1",
@@ -61,6 +61,11 @@ class Printer
     return "Good luck!"
   end
 
+  def game_continue_guessing
+    return  "Send a GET request with the PATH /game to check your guess " +
+            "see if your guess is too low or too high. Send another POST " +
+            "with another guess to keep guessing."
+  end
 
   def word_found_or_not_found_message(request_lines)
     word = @parser.retrieve_word_for_word_search(request_lines)
@@ -70,7 +75,7 @@ class Printer
   end
 
   def print_debug(request_lines)
-    "Verb: #{@parser.retrieve_verb(request_lines)}" + ("\n") + 
+    "Verb: #{@parser.retrieve_verb(request_lines)}" + ("\n") +
     "Path: #{@parser.retrieve_path(request_lines)}" + ("\n") +
     "Protocol: #{@parser.retrieve_protocol(request_lines)}" + ("\n") +
     "Host: #{@parser.retrieve_host(request_lines)}" + ("\n") +

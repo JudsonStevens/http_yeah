@@ -36,6 +36,7 @@ class Router
     when input == "/game"         then guess_response
     when word_search_input(input) then search_dictionary(request_lines)
     end
+    print_to_client("Uknown PATH!", "404 Not Found")
   end
 
   def word_search_input(input)
@@ -45,6 +46,7 @@ class Router
   end
 
   def guess_response
+    @counter += 1
     if @game == nil
       response = "You need to start a game with a POST request first!"
     else
@@ -54,16 +56,24 @@ class Router
   end
 
   def post_handler(request_lines, input)
-    if input == "/start_game"
+    @counter += 1
+    if input == "/start_game" && @game == nil
       response = @printer.game_start_message
-      print_to_client(response)
+      print_to_client(response, "301 Moved Permanently")
       @game = Game.new
+    elsif input == "/start_game" && @game.class == Game
+      print_to_client("Game in progress!", "403 Forbidden")
     elsif input == "/game"
+      @printer.got_a_request_message(request_lines)
       body = @client.read(@printer.print_content_length(request_lines).to_i)
       guess = body.split("=")[1]
-      @guesses << guess
-      require "pry"; binding.pry
-    @printer.got_a_request_message(request_lines)
+      win = @game.receive_guess(guess)
+      response = @printer.game_continue_guessing
+      print_to_client(response)
+      if win == true
+        response = @printer.game_win_message
+        print_to_client(response)
+      end
     end
   end
 
@@ -98,9 +108,9 @@ class Router
     return "Shutdown"
   end
 
-  def print_to_client(response)
+  def print_to_client(response, status_code = "200 ok")
     output = @printer.output_formatted(response)
-    header = @printer.headers_formatted(output)
+    header = @printer.headers_formatted(output, status)
     @client.puts header
     @client.puts output
   end

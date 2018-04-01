@@ -17,7 +17,7 @@ class Parser
     results_hash = request_lines_to_hash(split_array)
     results_hash["Content-Length"]
   end
-  
+
   def retrieve_word_for_word_search(request_lines)
     retrieve_path(request_lines).split("?")[1].split("=")[1]
   end

@@ -8,9 +8,11 @@ class Game
     @answer = rand(100)
   end
 
-
   def receive_guess(guess)
-    @guesses << guess
+    @guesses << guess.to_i
+    if guess == @answer
+      return true
+    end
   end
 
   def respond_to_query
