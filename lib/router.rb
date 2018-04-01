@@ -4,13 +4,15 @@ class Router
   attr_reader :printer,
               :counter,
               :client,
-              :guesses
+              :guesses,
+              :game
 
   def initialize
     @counter = 0
     @printer = Printer.new
     @guesses = []
     @client = nil
+    @game = nil
   end
 
   def accept_client(client)
@@ -45,6 +47,7 @@ class Router
     if input == "/start_game"
       response = @printer.game_start_message
       print_to_client(response)
+      @game = Game.new
     elsif input == "/game"
       body = @client.read(@printer.print_content_length(request_lines).to_i)
       guess = body.split("=")[1]

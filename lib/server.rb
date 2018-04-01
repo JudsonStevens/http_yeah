@@ -14,7 +14,6 @@ class Server
   end
 
   def start_server
-
     @printer.ready_message
     loop do
       request_lines = []
@@ -22,14 +21,12 @@ class Server
       @router.accept_client(@client)
       while line = @client.gets and !line.chomp.empty?
         request_lines << line.chomp
-        # require "pry"; binding.pry
       end
       @router.got_a_request(request_lines)
       message = @router.parse_request(request_lines)
       if message == "Shutdown"
         shutdown
       end
-
     end
   end
 
