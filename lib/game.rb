@@ -1,8 +1,11 @@
 class Game
 
+<<<<<<< HEAD
   attr_reader :guesses,
               :answer
 
+=======
+>>>>>>> 65c9ecf579bc81e8836ae66dd300cb914b0dc1d8
   def initialize
     @guesses = []
     @answer = rand(100)
@@ -15,6 +18,7 @@ class Game
 
   def respond_to_query
     if @guesses.last > @answer
+<<<<<<< HEAD
       return "Your current guess is too high."
     elsif @guesses.last < @answer
       return "Your current guess is too low."
@@ -29,3 +33,13 @@ class Game
            "#{respond_to_query}"
   end
 end
+=======
+      return "too high"
+    elsif @guesses.last < @answer
+      return "too low"
+    else
+      return "congratulations"
+    end
+  end
+  
+>>>>>>> 65c9ecf579bc81e8836ae66dd300cb914b0dc1d8
