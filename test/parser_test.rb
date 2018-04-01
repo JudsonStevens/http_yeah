@@ -30,5 +30,54 @@ class ParserTest < MiniTest::Test
     assert_equal expected, actual
   end
 
+  def test_it_can_retrieve_the_protocol
+    expected = "HTTP/1.1"
+    actual = @p.retrieve_protocol(@r)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_retrieve_the_port
+    expected = "9292"
+    actual = @p.retrieve_port(@r)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_retrieve_the_origin
+    expected = "localhost"
+    actual = @p.retrieve_origin(@r)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_retrieve_the_host
+    expected = "localhost"
+    actual = @p.retrieve_host(@r)
+    assert_equal expected, actual
+  end
+
+  def test_it_can_retrieve_the_accept
+    expected = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    actual = @p.retrieve_accept(@r)
+    assert_equal expected, actual
+  end
+  
+  def test_it_splits_request_lines_array_into_smaller_array
+    expected = ["GET / HTTP/1.1"]
+    actual = @p.split_array_into_smaller_array(@r)[0]
+    assert_equal expected, actual
+  end
+
+  def test_it_turns_request_lines_array_into_hash
+    expected = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    new_array = @p.split_array_into_smaller_array(@r)
+    actual = @p.request_lines_to_hash(new_array)["Accept"]
+    assert_equal expected, actual
+  end
+
+  def test_it_returns_location_and_port
+    expected = [["localhost:9292", nil]]
+    new_array = @p.split_array_into_smaller_array(@r)
+    actual = @p.return_location_port_array_from_host(new_array)
+    assert_equal expected, actual
+  end
 
 end
