@@ -42,11 +42,19 @@ class Printer
     @parser.retrieve_path(request_lines)
   end
 
+  def retrieve_verb(request_lines)
+    @parser.retrieve_verb(request_lines)
+  end
+
   def got_a_request_message(request_lines)
     puts "Got this request:"
     puts request_lines.inspect
-    puts print_debug(request_lines)
+    # puts print_debug(request_lines)
     puts "\n"
+  end
+
+  def printing_content_length(request_lines)
+    @parser.retrieve_content_length(request_lines)
   end
 
   def word_found_or_not_found_message(request_lines)

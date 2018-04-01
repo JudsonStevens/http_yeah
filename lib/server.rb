@@ -32,7 +32,9 @@ class Server
 
   def parse_request(request_lines)
     input = @printer.retrieve_path(request_lines)
+    verb = @printer.retrieve_verb(request_lines)
     case
+    when verb == "POST"           then post_handler(request_lines)
     when input == "/"             then output_diagnostics(request_lines)
     when input == "/hello"        then send_hello_world
     when input == "/datetime"     then print_date_and_time
@@ -43,6 +45,11 @@ class Server
 
   def word_search_input(input)
     input.include?("word_search")
+  end
+
+  def post_handler(request_lines)
+    puts @client.read(@printer.printing_content_length(request_lines).to_i)
+    @printer.got_a_request_message(request_lines)
   end
 
   def search_dictionary(request_lines)
