@@ -1,7 +1,4 @@
 require 'socket'
-require "./lib/printer.rb"
-require './lib/router.rb'
-
 class Server
   attr_reader :server,
               :router,
@@ -17,7 +14,6 @@ class Server
 
   def start_server
     @printer.ready_message
-     @threads << Thread.start {
     loop do
       client = @server.accept
       request_lines = []
@@ -28,7 +24,5 @@ class Server
       @router.got_a_request(request_lines)
       @router.parse_request(request_lines)
     end
-  }
-  @threads.each { |thread| thread.join }
   end
 end

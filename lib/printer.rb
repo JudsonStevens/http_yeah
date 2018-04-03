@@ -1,4 +1,4 @@
-require_relative "parser.rb"
+require 'json'
 
 class Printer
 
@@ -17,6 +17,11 @@ class Printer
     @hello_world_counter += 1
     return "<pre>" + "Hello, World! (#{hello_world_counter})" + "</pre>"
   end
+
+  def start_game_first_message
+    return "You need to start a game with a POST request first!"
+  end
+
 
   def date_and_time_message
     return "<pre> #{Time.now.strftime('%I:%M%p on %A, %B %e, %Y')} </pre>"
@@ -80,6 +85,17 @@ class Printer
     result = @parser.return_word_validity(word)
     return "#{word} is a known word" if result
     return "#{word} is not a known word" if !result
+  end
+
+  def print_word_suggestions(word, suggestions, value)
+    require "pry"; binding.pry
+    if value == true
+      return {word: "#{word}", is_word: "#{value}"}.to_json
+    else
+      value = "is_a_word_fragment"
+      word_hash = {word: "#{word}", is_word: "#{value}", possible_matches: "#{suggestions}"}.to_json
+      return JSON.pretty_generate(word_hash).delete('\\')
+    end
   end
 
   def print_debug(request_lines)
