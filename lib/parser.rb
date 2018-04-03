@@ -69,7 +69,7 @@ class Parser
 
   def return_word_validity(word)
     found_word = File.open('/usr/share/dict/words') do |file|
-      file.grep(/#{word}/)
+      file.grep(/#{word.downcase}/)
     end
     return false if found_word == []
     return true

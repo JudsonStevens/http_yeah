@@ -41,7 +41,10 @@ class Printer
   def error_message_contents
     return "A system error has occured, the server has shut down."
   end
-  
+
+  def sleep_message
+    return "yawn..."
+  end
 
   def retrieve_path(request_lines)
     @parser.retrieve_path(request_lines)
