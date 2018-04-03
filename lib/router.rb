@@ -90,8 +90,11 @@ class Router
   end
 
   def guess_response
-    response = start_game_first_message if @game == nil
-    response = @game.list_guess_information
+    if @game == nil
+      response = @printer.start_game_first_message
+    else
+      response = @game.list_guess_information
+    end
     print_to_client(response)
   end
 
@@ -116,11 +119,7 @@ class Router
     response = @printer.word_found_or_not_found_message(request_lines)
     if @parser.retrieve_accept(request_lines) == "application/json"
       word = response.split[0]
-      if response.split[2] == "not"
-        value = false
-      else
-        value = true
-      end
+      response.split[2] == "not" ? value = false : value = true
       word_fragment_search(word, value)
     end
     print_to_client(response)
@@ -129,7 +128,6 @@ class Router
   def word_fragment_search(word, value)
     populate_dictionary_into_trie
     suggestions = @word_search_trie.suggest(word, true)
-    require "pry"; binding.pry
     response = @printer.print_word_suggestions(word, suggestions, value)
     print_to_client(response)
   end
