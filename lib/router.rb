@@ -6,7 +6,8 @@ class Router
               :counter,
               :client,
               :guesses,
-              :game
+              :game,
+              :threads
 
   def initialize
     @counter = 0
@@ -14,6 +15,7 @@ class Router
     @guesses = []
     @client = nil
     @game = nil
+    @threads = []
   end
 
   def accept_client(client)
@@ -25,19 +27,26 @@ class Router
   end
 
   def parse_request(request_lines)
-    input = @printer.retrieve_path(request_lines)
+    path = @printer.retrieve_path(request_lines)
     verb = @printer.retrieve_verb(request_lines)
     case
-    when verb == "POST"           then post_handler(request_lines, input)
-    when input == "/"             then output_diagnostics(request_lines)
-    when input == "/hello"        then print_hello_world
-    when input == "/datetime"     then print_date_and_time
-    when input == "/shutdown"     then shutdown(@counter)
-    when input == "/game"         then guess_response
-    when input == "/force_error"  then error_message
-    when word_search_input(input) then search_dictionary(request_lines)
+    when verb == "POST"          then post_handler(request_lines, path)
+    when path == "/"             then output_diagnostics(request_lines)
+    when path == "/hello"        then print_hello_world
+    when path == "/datetime"     then print_date_and_time
+    when path == "/shutdown"     then shutdown(@counter)
+    when path == "/game"         then guess_response
+    when path == "/force_error"  then error_message
+    when path == "/sleepy"       then sleepy_time
+    when word_search_path(path) then search_dictionary(request_lines)
     end
     uknown_string
+  end
+
+  def sleepy_time
+    sleep(3)
+    response = @printer.sleep_message + "#{@counter}"
+    print_to_client(response)
   end
 
   def error_message
@@ -51,9 +60,9 @@ class Router
     print_to_client("Uknown PATH!", "404 Not Found")
   end
 
-  def word_search_input(input)
-    if input != nil
-      input.include?("word_search")
+  def word_search_path(path)
+    if path != nil
+      path.include?("word_search")
     end
   end
 
@@ -67,15 +76,15 @@ class Router
     print_to_client(response)
   end
 
-  def post_handler(request_lines, input)
+  def post_handler(request_lines, path)
     @counter += 1
-    if input == "/start_game" && @game == nil
+    if path == "/start_game" && @game == nil
       response = @printer.game_start_message
       print_to_client(response, "301 Moved Permanently")
       @game = Game.new
-    elsif input == "/start_game" && @game.class == Game
+    elsif path == "/start_game" && @game.class == Game
       print_to_client("Game in progress!", "403 Forbidden")
-    elsif input == "/game"
+    elsif path == "/game"
       @printer.got_a_request_message(request_lines)
       body = @client.read(@printer.print_content_length(request_lines).to_i)
       guess = body.split("=")[1]
@@ -117,7 +126,6 @@ class Router
     response = @printer.shutdown_message(counter)
     print_to_client(response)
     @client.close
-    return "Shutdown"
   end
 
   def print_to_client(response, status_code = "200 ok")
