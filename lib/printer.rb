@@ -9,8 +9,12 @@ class Printer
     @parser = Parser.new
   end
 
-  def ready_message
-    puts "Ready for a request."
+  def retrieve_path(request_lines)
+    @parser.retrieve_path(request_lines)
+  end
+
+  def retrieve_verb(request_lines)
+    @parser.retrieve_verb(request_lines)
   end
 
   def hello_world_response
@@ -43,8 +47,17 @@ class Printer
             "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
+  def redirect_headers_formatted(output, status, new_location)
+    return ["http/1.1 #{status}",
+            "Location: #{new_location}"
+            "date: #{Time.now.strftime('%a, %e, %b, %Y, %H:%M:%S %z')}",
+            "server: ruby",
+            "content-type: text/html; charset=iso-8859-1",
+            "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+  end
+
   def error_message_contents
-    return "A system error has occured, the server has shut down."
+    return "500 ERROR - A system error has occured, the server has shut down."
   end
 
   def sleep_message
@@ -62,7 +75,6 @@ class Printer
   def got_a_request_message(request_lines)
     puts "Got this request:"
     puts request_lines.inspect
-    # puts print_debug(request_lines)
     puts "\n"
   end
 
@@ -76,8 +88,8 @@ class Printer
 
   def game_continue_guessing
     return  "Send a GET request with the PATH /game to check your guess " +
-            "see if your guess is too low or too high. Send another POST " +
-            "with another guess to keep guessing."
+            "see if your guess is too low or too high. Send a POST " +
+            "with a guess to keep guessing."
   end
 
   def word_found_or_not_found_message(request_lines)

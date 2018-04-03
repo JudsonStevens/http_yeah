@@ -8,12 +8,11 @@ class Server
   def initialize(port)
     @server = TCPServer.new(port)
     @router = Router.new
-    @printer = Printer.new
     @threads = []
   end
 
   def start_server
-    @printer.ready_message
+    puts "Ready for a request."
     loop do
       client = @server.accept
       request_lines = []

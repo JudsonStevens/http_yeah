@@ -9,7 +9,6 @@ class Router
               :threads
 
   def initialize
-    @parser = Parser.new
     @printer = Printer.new
     @word_search_trie = CompleteMe.new
     @counter = 0
@@ -31,8 +30,8 @@ class Router
   end
 
   def parse_request(request_lines)
-    path = @parser.retrieve_path(request_lines)
-    verb = @parser.retrieve_verb(request_lines)
+    path = @printer.retrieve_path(request_lines)
+    verb = @printer.retrieve_verb(request_lines)
     @counter += 1
     case
     when verb == "POST"                 then post_handler(request_lines, path)
@@ -52,7 +51,7 @@ class Router
     if path == "/start_game" && @game == nil
       start_new_game
     elsif path == "/start_game" && @game.class == Game
-      print_to_client("Game in progress!", "403 Forbidden")
+      print_to_client("403 - FORBIDDEN - Game in progress!", "403 Forbidden")
     elsif path == "/game"
       store_guess_and_check_win_conditions(request_lines, path)
     end
@@ -60,7 +59,8 @@ class Router
 
   def start_new_game
     response = @printer.game_start_message
-    print_to_client(response, "301 Moved Permanently")
+    new_location = "localhost:9292/game"
+    redirect_print_to_client(response, "301 Moved Permanently", new_location)
     @game = Game.new
   end
 
@@ -139,7 +139,7 @@ class Router
   end
 
   def uknown_string
-    print_to_client("Uknown PATH!", "404 Not Found")
+    print_to_client("404 - Uknown PATH!", "404 Not Found")
   end
 
   def print_to_client(response, status_code = "200 ok")
@@ -149,4 +149,10 @@ class Router
     @client.puts output
   end
 
+  def redirect_print_to_client(response, status_code = "200 ok", new_location)
+    output = @printer.output_formatted(response)
+    header = @printer.redirect_headers_formatted(output, status_code, new_location)
+    @client.puts header
+    @client.puts output
+  end
 end
