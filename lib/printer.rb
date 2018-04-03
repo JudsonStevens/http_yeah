@@ -88,7 +88,6 @@ class Printer
   end
 
   def print_word_suggestions(word, suggestions, value)
-    require "pry"; binding.pry
     if value == true
       return {word: "#{word}", is_word: "#{value}"}.to_json
     else

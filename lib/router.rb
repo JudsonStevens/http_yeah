@@ -116,7 +116,6 @@ class Router
     response = @printer.word_found_or_not_found_message(request_lines)
     if @parser.retrieve_accept(request_lines) == "application/json"
       word = response.split[0]
-      require "pry"; binding.pry
       if response.split[2] == "not"
         value = false
       else
