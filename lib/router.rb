@@ -29,6 +29,7 @@ class Router
   def parse_request(request_lines)
     path = @printer.retrieve_path(request_lines)
     verb = @printer.retrieve_verb(request_lines)
+    @threads << Thread.start {
     case
     when verb == "POST"          then post_handler(request_lines, path)
     when path == "/"             then output_diagnostics(request_lines)
@@ -41,6 +42,8 @@ class Router
     when word_search_path(path) then search_dictionary(request_lines)
     end
     uknown_string
+  }
+  @threads.each { |thread| thread.value }
   end
 
   def sleepy_time
@@ -125,8 +128,7 @@ class Router
   def shutdown(counter)
     response = @printer.shutdown_message(counter)
     print_to_client(response)
-    return true
-    require "pry"; binding.pry
+    @client.close
   end
 
   def print_to_client(response, status_code = "200 ok")
