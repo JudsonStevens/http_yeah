@@ -44,24 +44,29 @@ class Router
     when path == "/sleepy"              then sleepy_time
     when word_search_path(path)         then search_dictionary(request_lines)
     end
-    uknown_string
+    unknown_string
   end
 
   def post_handler(request_lines, path)
-    if path == "/start_game" && @game == nil
-      start_new_game
-    elsif path == "/start_game" && @game.class == Game
-      print_to_client("403 - FORBIDDEN - Game in progress!", "403 Forbidden")
-    elsif path == "/game"
-      store_guess_and_check_win_conditions(request_lines, path)
+    case
+    when path == "/start_game" && @game == nil  then start_new_game
+    when path == "/start_game" && @game         then print_to_client("403 - FORBIDDEN - Game in progress!", "403 Forbidden")
+    when path == "/game" && @game == nil        then start_new_game_redirect
+    when path == "/game"                        then store_guess_and_check_win_conditions(request_lines, path)
     end
   end
 
-  def start_new_game
-    response = @printer.game_start_message
-    new_location = "localhost:9292/game"
-    redirect_print_to_client(response, "301 Moved Permanently", new_location)
+  def start_new_game_redirect
     @game = Game.new
+    response = @printer.game_start_message
+    new_location = "http://localhost:9292/"
+    redirect_print_to_client("301 Moved Permanently", new_location)
+  end
+
+  def start_new_game
+    @game = Game.new
+    response = @printer.game_start_message
+    print_to_client(response)
   end
 
   def store_guess_and_check_win_conditions(request_lines, path)
@@ -98,7 +103,6 @@ class Router
     print_to_client(response)
   end
 
-
   def shutdown(counter)
     response = @printer.shutdown_message(counter)
     print_to_client(response)
@@ -117,7 +121,7 @@ class Router
 
   def search_dictionary(request_lines)
     response = @printer.word_found_or_not_found_message(request_lines)
-    if @parser.retrieve_accept(request_lines) == "application/json"
+    if @printer.retrieve_accept(request_lines) == "application/json"
       word = response.split[0]
       response.split[2] == "not" ? value = false : value = true
       word_fragment_search(word, value)
@@ -138,7 +142,7 @@ class Router
     raise "A SYSTEM ERROR has occured"
   end
 
-  def uknown_string
+  def unknown_string
     print_to_client("404 - Uknown PATH!", "404 Not Found")
   end
 
@@ -149,10 +153,8 @@ class Router
     @client.puts output
   end
 
-  def redirect_print_to_client(response, status_code = "200 ok", new_location)
-    output = @printer.output_formatted(response)
-    header = @printer.redirect_headers_formatted(output, status_code, new_location)
+  def redirect_print_to_client(status_code = "200 ok", new_location)
+    header = @printer.redirect_headers_formatted(status_code, new_location)
     @client.puts header
-    @client.puts output
   end
 end

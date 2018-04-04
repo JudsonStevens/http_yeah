@@ -48,7 +48,7 @@ class Parser
 
   def split_array_into_smaller_array(request_lines)
     request_lines.map { |index| index.split(": ") }
-  ends
+  end
 
   def request_lines_to_hash(split_array)
     split_array.delete_if { |element| element[0] == "Host" }

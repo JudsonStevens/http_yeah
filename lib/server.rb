@@ -13,6 +13,7 @@ class Server
 
   def start_server
     puts "Ready for a request."
+
     loop do
       client = @server.accept
       request_lines = []

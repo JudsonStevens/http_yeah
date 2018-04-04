@@ -17,6 +17,10 @@ class Printer
     @parser.retrieve_verb(request_lines)
   end
 
+  def retrieve_accept(request_lines)
+    @parser.retrieve_accept(request_lines)
+  end
+
   def hello_world_response
     @hello_world_counter += 1
     return "<pre>" + "Hello, World! (#{hello_world_counter})" + "</pre>"
@@ -25,7 +29,6 @@ class Printer
   def start_game_first_message
     return "You need to start a game with a POST request first!"
   end
-
 
   def date_and_time_message
     return "<pre> #{Time.now.strftime('%I:%M%p on %A, %B %e, %Y')} </pre>"
@@ -47,13 +50,12 @@ class Printer
             "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
-  def redirect_headers_formatted(output, status, new_location)
+  def redirect_headers_formatted(status, new_location)
     return ["http/1.1 #{status}",
-            "Location: #{new_location}"
+            "Location: #{new_location}",
             "date: #{Time.now.strftime('%a, %e, %b, %Y, %H:%M:%S %z')}",
             "server: ruby",
-            "content-type: text/html; charset=iso-8859-1",
-            "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+            "content-type: text/html; charset=iso-8859-1"].join("\r\n")
   end
 
   def error_message_contents
@@ -64,18 +66,10 @@ class Printer
     return "yawn..."
   end
 
-  def retrieve_path(request_lines)
-    @parser.retrieve_path(request_lines)
-  end
-
-  def retrieve_verb(request_lines)
-    @parser.retrieve_verb(request_lines)
-  end
-
   def got_a_request_message(request_lines)
-    puts "Got this request:"
-    puts request_lines.inspect
-    puts "\n"
+    print "Got this request:"
+    print request_lines.inspect
+    print "\n"
   end
 
   def print_content_length(request_lines)
@@ -104,7 +98,8 @@ class Printer
       return {word: "#{word}", is_word: "#{value}"}.to_json
     else
       value = "is_a_word_fragment"
-      word_hash = {word: "#{word}", is_word: "#{value}", possible_matches: "#{suggestions}"}.to_json
+      word_hash = {word: "#{word}", is_word: "#{value}",
+                   possible_matches: "#{suggestions}"}.to_json
       return JSON.pretty_generate(word_hash).delete('\\')
     end
   end
