@@ -49,16 +49,15 @@ class Router
 
   def post_handler(request_lines, path)
     case
-    when path == "/start_game" && @game == nil  then start_new_game
+    when path == "/start_game" && @game == nil  then start_new_game_redirect
     when path == "/start_game" && @game         then print_to_client("403 - FORBIDDEN - Game in progress!", "403 Forbidden")
-    when path == "/game" && @game == nil        then start_new_game_redirect
+    when path == "/game" && @game == nil        then start_new_game
     when path == "/game"                        then store_guess_and_check_win_conditions(request_lines, path)
     end
   end
 
   def start_new_game_redirect
     @game = Game.new
-    response = @printer.game_start_message
     new_location = "http://localhost:9292/"
     redirect_print_to_client("301 Moved Permanently", new_location)
   end
@@ -76,7 +75,8 @@ class Router
     response = @printer.game_continue_guessing
     win = @game.receive_guess(guess)
     response = @printer.game_win_message if win
-    print_to_client(response)
+    new_location = "http://localhost:9292/game"
+    redirect_print_to_client("303 Redirect to Game", new_location)
   end
 
   def output_diagnostics(request_lines)

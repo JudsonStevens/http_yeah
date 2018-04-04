@@ -68,8 +68,8 @@ class Printer
 
   def got_a_request_message(request_lines)
     print "Got this request:"
-    print request_lines.inspect
-    print "\n"
+    puts request_lines.inspect
+    puts "\n"
   end
 
   def print_content_length(request_lines)
