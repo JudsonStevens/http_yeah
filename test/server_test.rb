@@ -30,13 +30,27 @@ class ServerTest < MiniTest::Test
     assert response.body.include?("yawn")
   end
 
-  def test_it_can_receive_a_request_and_send_a_response_to_force_error
-    response = Faraday.get "http://localhost:9292/force_error"
+  # def test_it_can_receive_a_request_and_send_a_response_to_force_error
+  #   response = Faraday.get "http://localhost:9292/force_error"
+  #
+  #   assert response.body.include?("500")
+  # end
 
-    assert response.body.include?("500")
+  def test_it_can_receive_a_request_and_send_a_response_to_diagnostics
+    response = Faraday.get "http://localhost:9292/"
+
+    assert response.body.include?("Accept")
   end
 
-  
+  # def test_it_can_receive_a_request_and_send_a_response_to_game
+  #   response = Faraday.get "http://localhost:9292/game"
+  #
+  #   assert response.body.include?("You need")
+  # end
 
+  def test_it_can_receive_a_request_and_send_a_response_to_word_search
+    response = Faraday.get "http://localhost:9292/word_search?word=never"
 
+    assert response.body.include?("is a known word")
+  end
 end
