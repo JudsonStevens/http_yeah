@@ -20,6 +20,7 @@ class Server
   # is sent to the router in order for it to be parsed and then operated on.
   # The got_a_request method prints out the request to the server/terminal,
   # enabling some debugging.
+  
   def start_server
     puts "Ready for a request."
     loop do

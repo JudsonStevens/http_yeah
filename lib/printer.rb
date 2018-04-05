@@ -96,6 +96,13 @@ class Printer
     return "#{word} is not a known word" if !result
   end
 
+  # This method takes in the word we are looking for, the suggestions form
+  # the word search trie if it's a fragment, and the true or false value,
+  # which tells it whether or not the word is a fragment. If it is,
+  # it returns a formatted JSON string that includes possible word suggestions
+  # for the fragment. If it is not a fragment, it returns the word and
+  # tells the user it is a valid word. 
+
   def print_word_suggestions(word, suggestions, value)
     if value == true
       return {word: "#{word}", is_word: "#{value}"}.to_json
