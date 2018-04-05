@@ -13,9 +13,13 @@ class Parser
   end
 
   def retrieve_content_length(request_lines)
-    split_array = split_array_into_smaller_array(request_lines)
-    results_hash = request_lines_to_hash(split_array)
+    results_hash = sort_out_hash_values_from_request(request_lines)
     results_hash["Content-Length"]
+  end
+
+  def retrieve_accept(request_lines)
+    results_hash = sort_out_hash_values_from_request(request_lines)
+    results_hash["Accept"]
   end
 
   def retrieve_word_for_word_search(request_lines)
@@ -23,28 +27,20 @@ class Parser
   end
 
   def retrieve_host(request_lines)
-    split_array = split_array_into_smaller_array(request_lines)
-    result_array = return_location_port_array_from_host(split_array)
+    result_array = sort_out_location_and_port_information(request_lines)
     result_array[0][0].split(":")[0]
   end
 
   def retrieve_port(request_lines)
-    split_array = split_array_into_smaller_array(request_lines)
-    result_array = return_location_port_array_from_host(split_array)
+    result_array = sort_out_location_and_port_information(request_lines)
     result_array[0][0].split(":")[1]
   end
 
   def retrieve_origin(request_lines)
-    split_array = split_array_into_smaller_array(request_lines)
-    result_array = return_location_port_array_from_host(split_array)
+    result_array = sort_out_location_and_port_information(request_lines)
     result_array[0][0].split(":")[0]
   end
 
-  def retrieve_accept(request_lines)
-    split_array = split_array_into_smaller_array(request_lines)
-    results_hash = request_lines_to_hash(split_array)
-    results_hash["Accept"]
-  end
 
   def split_array_into_smaller_array(request_lines)
     request_lines.map { |index| index.split(": ") }
@@ -63,6 +59,16 @@ class Parser
       end
     end
     host_array.compact
+  end
+
+  def sort_out_location_and_port_information(request_lines)
+    split_array = split_array_into_smaller_array(request_lines)
+    result_array = return_location_port_array_from_host(split_array)
+  end
+
+  def sort_out_hash_values_from_request(request_lines)
+    split_array = split_array_into_smaller_array(request_lines)
+    results_hash = request_lines_to_hash(split_array)
   end
 
   def return_word_validity(word)

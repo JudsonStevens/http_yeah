@@ -96,13 +96,13 @@ class PrinterTest < MiniTest::Test
     assert_equal expected, actual
   end
 
-  def test_it_returns_the_continue_guessing_message
-    expected = "Send a GET request with the PATH /game to check your guess " +
-            "see if your guess is too low or too high. Send a POST " +
-            "with a guess to keep guessing."
-    actual = @printer.game_continue_guessing
-    assert_equal expected, actual
-  end
+  # def test_it_returns_the_continue_guessing_message
+  #   expected = "Send a GET request with the PATH /game to check your guess " +
+  #           "see if your guess is too low or too high. Send a POST " +
+  #           "with a guess to keep guessing."
+  #   actual = @printer.game_continue_guessing
+  #   assert_equal expected, actual
+  # end
 
   def test_it_can_return_a_found_word
     expected = "never is a known word"
@@ -130,6 +130,4 @@ class PrinterTest < MiniTest::Test
     actual = @printer.print_debug(@request)
     assert_equal expected, actual
   end
-  
-
 end
