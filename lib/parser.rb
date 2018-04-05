@@ -1,5 +1,9 @@
 class Parser
 
+  # This class is used to parse the request from the client and to tease out
+  # the information contained in the request in order to pass it back to the
+  # printer where it can be used to perform operations.
+  
   def retrieve_verb(request_lines)
     request_lines[0].split[0]
   end
@@ -40,7 +44,6 @@ class Parser
     result_array = sort_out_location_and_port_information(request_lines)
     result_array[0][0].split(":")[0]
   end
-
 
   def split_array_into_smaller_array(request_lines)
     request_lines.map { |index| index.split(": ") }

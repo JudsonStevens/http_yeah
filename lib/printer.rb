@@ -2,6 +2,11 @@ require 'json'
 
 class Printer
 
+  # This class contains almost all of the messages we send back to the client.
+  # It also contains three methods, all named retrieve, that reach into the
+  # parser object and return values. This was done in order to keep the chain
+  # of communication clear, as the parser only talks to the printer.
+
   attr_reader :hello_world_counter
 
   def initialize
