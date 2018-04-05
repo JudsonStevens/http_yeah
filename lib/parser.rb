@@ -59,9 +59,7 @@ class Parser
   def return_location_port_array_from_host(split_array)
     host_array = split_array.map do |element|
       if element[0] == "Host"
-        location = element[1]
-        port = element[2]
-        [location, port]
+        [element[1], element[2]]
       end
     end
     host_array.compact

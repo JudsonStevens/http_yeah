@@ -72,9 +72,11 @@ class Router
     @printer.got_a_request_message(request_lines)
     body = @client.read(@printer.print_content_length(request_lines).to_i)
     guess = body.split("=")[1]
-    response = @printer.game_continue_guessing
     win = @game.receive_guess(guess)
-    response = @printer.game_win_message if win
+    if win
+      response = @printer.game_win_message(@game.list_guess_information)
+      print_to_client(response)
+    end
     new_location = "http://localhost:9292/game"
     redirect_print_to_client("303 Redirect to Game", new_location)
   end
@@ -95,11 +97,8 @@ class Router
   end
 
   def guess_response
-    if @game == nil
-      response = @printer.start_game_first_message
-    else
-      response = @game.list_guess_information
-    end
+    response = @printer.start_game_first_message if @game == nil
+    response = @game.list_guess_information
     print_to_client(response)
   end
 

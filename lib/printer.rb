@@ -80,10 +80,8 @@ class Printer
     return "Good luck!"
   end
 
-  def game_continue_guessing
-    return  "Send a GET request with the PATH /game to check your guess " +
-            "see if your guess is too low or too high. Send a POST " +
-            "with a guess to keep guessing."
+  def game_win_message(message_from_game)
+    return message_from_game
   end
 
   def word_found_or_not_found_message(request_lines)
